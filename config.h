@@ -29,9 +29,14 @@ static const unsigned int alphas[][3]      = {
 	/*               fg      bg        border     */
 	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
-};/* Custom keys */
+};
+
+/* Fn keys */
 #define XF86MonBrightnessDown	0x1008ff03
 #define XF86MonBrightnessUp		0x1008ff02
+#define XF86AudioMute			0x1008ff12
+#define XF86AudioRaiseVolume	0x1008ff13
+#define XF86AudioLowerVolume	0x1008ff11
 
 /* tagging */
 static const char *tags[] = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
@@ -86,8 +91,18 @@ static const char *termcmd[]  = { "sakura", NULL };
 // Not currently working, needs a super cool "im definitely not a cunt" terminal like st
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "sakura", NULL };
+
+/* Brightness */
 static const char *cmdbrightnessup[] = { "xbacklight", "+10", NULL };
 static const char *cmdbrightnessdown[] = { "xbacklight", "-10", NULL };
+
+/* Volume */
+static const char *cmdvolumeup[] = { "amixer", "set", "Master", "5%+" , NULL };
+static const char *cmdvolumedown[] = { "amixer", "set", "Master", "5%-" , NULL };
+static const char *cmdvolumetoggle[] = { "amixer", "set", "Master", "toggle", NULL };
+
+/* Screen locking */
+static const char *cmdlock[] = { "i3lock-fancy-rapid", "5", "10", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -121,8 +136,12 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ 0,							XF86MonBrightnessDown, 	spawn, {.v = cmdbrightnessdown } },
-	{ 0,							XF86MonBrightnessUp,	spawn, {.v = cmdbrightnessup } },
+	{ MODKEY|ShiftMask,				XK_l,	   spawn,		   {.v = cmdlock } },
+	{ 0,							XF86MonBrightnessDown, 	   spawn, {.v = cmdbrightnessdown } },
+	{ 0,							XF86MonBrightnessUp,	   spawn, {.v = cmdbrightnessup } },
+	{ 0,							XF86AudioLowerVolume,	   spawn, {.v = cmdvolumedown } },
+	{ 0,							XF86AudioRaiseVolume,	   spawn, {.v = cmdvolumeup } },
+	{ 0,							XF86AudioMute,			   spawn, {.v = cmdvolumetoggle } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
