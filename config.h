@@ -17,14 +17,24 @@ static const char col_cyan[]        = "#005577";
 static const char col_pastelpink[]  = "#ffcccc";
 static const char col_pastelblue[]  = "#d1fff4";
 static const char col_black[]	    = "#000000";
+static const unsigned int baralpha = 0xd0;
+static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_black, col_pastelpink, col_pastelblue },
 	[SchemeSel]  = { col_black, col_pastelblue,  col_pastelpink },
 };
 
+static const unsigned int alphas[][3]      = {
+	/*               fg      bg        border     */
+	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
+	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
+};/* Custom keys */
+#define XF86MonBrightnessDown	0x1008ff03
+#define XF86MonBrightnessUp		0x1008ff02
+
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -54,6 +64,7 @@ static const Layout layouts[] = {
 	{ "cmaster",	centeredmaster },
 	{ "cfmaster",	centeredfloatingmaster },
 	{ "grid",		grid },
+	{ NULL,			NULL },
 };
 
 /* key definitions */
@@ -72,6 +83,11 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 // static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *dmenucmd[] = { "rofi", "-show", "run", "-display-run", ">>> ", NULL};
 static const char *termcmd[]  = { "sakura", NULL };
+// Not currently working, needs a super cool "im definitely not a cunt" terminal like st
+static const char scratchpadname[] = "scratchpad";
+static const char *scratchpadcmd[] = { "sakura", NULL };
+static const char *cmdbrightnessup[] = { "xbacklight", "+10", NULL };
+static const char *cmdbrightnessdown[] = { "xbacklight", "-10", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -88,13 +104,15 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_u,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,						XK_q,	   setlayout,      {.v = &layouts[3]} },
 	{ MODKEY,						XK_w,	   setlayout,	   {.v = &layouts[4]} },
 	{ MODKEY,						XK_e,	   setlayout,	   {.v = &layouts[5]} },
 	{ MODKEY,						XK_r,	   setlayout,	   {.v = &layouts[6]} },
 	{ MODKEY,						XK_y,	   setlayout,      {.v = &layouts[7]} },
+	{ MODKEY|ShiftMask,			    XK_f,	   cyclelayout,    {.i = -1 } },
+	{ MODKEY|ShiftMask,           	XK_g,	   cyclelayout,    {.i = +1 } },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
@@ -103,6 +121,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ 0,							XF86MonBrightnessDown, 	spawn, {.v = cmdbrightnessdown } },
+	{ 0,							XF86MonBrightnessUp,	spawn, {.v = cmdbrightnessup } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
