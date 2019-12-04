@@ -92,7 +92,7 @@ static const char *dmenucmd[] = { "rofi", "-show", "run", "-display-run", ">>> "
 static const char *termcmd[]  = { "sakura", NULL };
 // Not currently working, needs a super cool "im definitely not a cunt" terminal like st
 static const char scratchpadname[] = "scratchpad";
-static const char *scratchpadcmd[] = { "sakura", NULL };
+static const char *scratchpadcmd[] = { "sakura", "-t", scratchpadname, NULL };
 
 /* Brightness */
 static const char *cmdbrightnessup[] = { "xbacklight", "+10", NULL };
@@ -110,6 +110,7 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,						XK_f,	   togglescratch,  {.v = scratchpadcmd }},
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
