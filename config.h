@@ -1,28 +1,35 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 4;        /* border pixel of windows */
-static const unsigned int gappx		= 6;		/* gaps between windows */
+static const unsigned int borderpx  = 3;        /* border pixel of windows */
+static const unsigned int gappx	= 6;		/* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-//static const char *fonts[]          = { "monospace:size=10" };
-static const char *fonts[]	    = { "xos4 Terminus:size=10" }; 
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[]	    = { "Terminus (TTF):size=9" }; 
+static const char dmenufont[]       = "monospace:size=8";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
 static const char col_pastelpink[]  = "#ffcccc";
-static const char col_pastelblue[]  = "#d1fff4";
+//static const char col_pastelblue[]  = "#d1fff4";
+static const char col_pastelblue[] = "#88ddf0";
 static const char col_black[]	    = "#000000";
-static const unsigned int baralpha = 0xd0;
+//static const unsigned int baralpha = 0xd0;
+static const unsigned int baralpha = 0xc8;
 static const unsigned int borderalpha = OPAQUE;
+//static const char *colors[][3]      = {
+	/*               fg         bg         border   */
+//	[SchemeNorm] = { col_black, col_pastelpink, col_pastelblue },
+//	[SchemeSel]  = { col_black, col_pastelblue,  col_pastelpink },
+//};
+
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_black, col_pastelpink, col_pastelblue },
-	[SchemeSel]  = { col_black, col_pastelblue,  col_pastelpink },
+	[SchemeNorm] = { col_pastelblue, col_gray1, col_gray2 },
+	[SchemeSel]  = { col_black, col_pastelpink,  col_pastelblue },
 };
 
 static const unsigned int alphas[][3]      = {
@@ -33,8 +40,8 @@ static const unsigned int alphas[][3]      = {
 
 /* Fn keys */
 #define XF86MonBrightnessDown	0x1008ff03
-#define XF86MonBrightnessUp		0x1008ff02
-#define XF86AudioMute			0x1008ff12
+#define XF86MonBrightnessUp	0x1008ff02
+#define XF86AudioMute		0x1008ff12
 #define XF86AudioRaiseVolume	0x1008ff13
 #define XF86AudioLowerVolume	0x1008ff11
 
@@ -66,9 +73,9 @@ static const Layout layouts[] = {
 	{ "float",		NULL },    /* no layout function means floating behavior */
 	{ "zoom",		monocle },
 	{ "spiral",		spiral },
-	{ "dwindle",	dwindle },
-	{ "cmaster",	centeredmaster },
-	{ "cfmaster",	centeredfloatingmaster },
+	{ "dwindle",		dwindle },
+	{ "cmaster",		centeredmaster },
+	{ "cfmaster",		centeredfloatingmaster },
 	{ "grid",		grid },
 	{ NULL,			NULL },
 };
@@ -89,10 +96,10 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 // static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *dmenucmd[] = { "rofi", "-show", "run", "-display-run", ">>> ", NULL};
-static const char *termcmd[]  = { "sakura", NULL };
+static const char *termcmd[]  = { "st", NULL };
 // Not currently working, needs a super cool "im definitely not a cunt" terminal like st
 static const char scratchpadname[] = "scratchpad";
-static const char *scratchpadcmd[] = { "sakura", "-t", scratchpadname, NULL };
+static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
 /* Brightness */
 static const char *cmdbrightnessup[] = { "xbacklight", "+10", NULL };
@@ -156,7 +163,8 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask,             XK_p,      quit,           {0} },
+	{ MODKEY|ControlMask|ShiftMask, XK_p,      quit,           {1} },
 };
 
 /* button definitions */
