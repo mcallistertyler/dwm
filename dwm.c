@@ -60,6 +60,7 @@
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
 
 #define SYSTEM_TRAY_REQUEST_DOCK    0
+#define _NET_SYSTEM_TRAY_ORIENTATION_HORZ 0
 
 /* XEMBED messages */
 #define XEMBED_EMBEDDED_NOTIFY      0
@@ -82,7 +83,7 @@ enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
 enum { SchemeNorm, SchemeSel }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
 		NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
-       NetWMFullscreen, NetActiveWindow, NetWMWindowType,
+       NetWMWindowTypeDock, NetSystemTrayVisual, NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
 enum { Manager, Xembed, XembedInfo, XLast }; /* Xembed atoms */
 enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
@@ -283,6 +284,8 @@ static void zoom(const Arg *arg);
 
 /* variables */
 static Systray *systray =  NULL;
+static unsigned long systrayorientation = _NET_SYSTEM_TRAY_ORIENTATION_HORZ;
+
 static const char broken[] = "broken";
 static char stext[256];
 static int screen;
@@ -1855,6 +1858,8 @@ setup(void)
 	netatom[NetSystemTrayOP] = XInternAtom(dpy, "_NET_SYSTEM_TRAY_OPCODE", False);
 	netatom[NetSystemTrayOrientation] = XInternAtom(dpy, "_NET_SYSTEM_TRAY_ORIENTATION", False);
 	netatom[NetSystemTrayOrientationHorz] = XInternAtom(dpy, "_NET_SYSTEM_TRAY_ORIENTATION_HORZ", False);
+	netatom[NetSystemTrayVisual] = XInternAtom(dpy, "_NET_SYSTEM_TRAY_VISUAL", False);
+	netatom[NetWMWindowTypeDock] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
 	netatom[NetWMName] = XInternAtom(dpy, "_NET_WM_NAME", False);
 	netatom[NetWMState] = XInternAtom(dpy, "_NET_WM_STATE", False);
 	netatom[NetWMCheck] = XInternAtom(dpy, "_NET_SUPPORTING_WM_CHECK", False);
@@ -2448,14 +2453,25 @@ updatesystray(void)
 		/* init systray */
 		if (!(systray = (Systray *)calloc(1, sizeof(Systray))))
 			die("fatal: could not malloc() %u bytes\n", sizeof(Systray));
-		systray->win = XCreateSimpleWindow(dpy, root, x, m->by, w, bh, 0, 0, scheme[SchemeSel][ColBg].pixel);
-		wa.event_mask        = ButtonPressMask | ExposureMask;
-		wa.override_redirect = True;
-		wa.background_pixel  = scheme[SchemeNorm][ColBg].pixel;
+
+		XSetWindowAttributes wa = {
+			.override_redirect = True,
+			.background_pixel = scheme[SchemeNorm][ColBg].pixel,
+			.border_pixel = 0,
+			.colormap = cmap,
+			.event_mask = ButtonPressMask|ExposureMask
+		};
+		systray->win = XCreateWindow(dpy, root, x, m->by, w, bh, 0, depth,
+						InputOutput, visual,
+						CWOverrideRedirect|CWBackPixel|CWBorderPixel|CWColormap|CWEventMask, &wa);
+
 		XSelectInput(dpy, systray->win, SubstructureNotifyMask);
 		XChangeProperty(dpy, systray->win, netatom[NetSystemTrayOrientation], XA_CARDINAL, 32,
-				PropModeReplace, (unsigned char *)&netatom[NetSystemTrayOrientationHorz], 1);
-		XChangeWindowAttributes(dpy, systray->win, CWEventMask|CWOverrideRedirect|CWBackPixel, &wa);
+				PropModeReplace, (unsigned char *)&systrayorientation, 1);
+		XChangeProperty(dpy, systray->win, netatom[NetSystemTrayVisual], XA_VISUALID, 32,
+				PropModeReplace, (unsigned char *)&visual->visualid, 1);
+		XChangeProperty(dpy, systray->win, netatom[NetWMWindowType], XA_ATOM, 32,
+				PropModeReplace, (unsigned char *)&netatom[NetWMWindowTypeDock], 1);
 		XMapRaised(dpy, systray->win);
 		XSetSelectionOwner(dpy, netatom[NetSystemTray], systray->win, CurrentTime);
 		if (XGetSelectionOwner(dpy, netatom[NetSystemTray]) == systray->win) {
@@ -2471,7 +2487,7 @@ updatesystray(void)
 	}
 	for (w = 0, i = systray->icons; i; i = i->next) {
 		/* make sure the background color stays the same */
-		wa.background_pixel  = scheme[SchemeNorm][ColBg].pixel;
+		wa.background_pixel = scheme[SchemeNorm][ColBg].pixel;
 		XChangeWindowAttributes(dpy, i->win, CWBackPixel, &wa);
 		XMapRaised(dpy, i->win);
 		w += systrayspacing;
@@ -2482,7 +2498,7 @@ updatesystray(void)
 			i->mon = m;
 	}
 	w = w ? w + systrayspacing : 1;
-	x -= w;
+ 	x -= w;
 	XMoveResizeWindow(dpy, systray->win, x, m->by, w, bh);
 	wc.x = x; wc.y = m->by; wc.width = w; wc.height = bh;
 	wc.stack_mode = Above; wc.sibling = m->barwin;
@@ -2491,9 +2507,9 @@ updatesystray(void)
 	XMapSubwindows(dpy, systray->win);
 	/* redraw background */
 	XSetForeground(dpy, drw->gc, scheme[SchemeNorm][ColBg].pixel);
-	XFillRectangle(dpy, systray->win, XCreateGC(dpy, root, 0 , NULL), 0, 0, w, bh);
+	XFillRectangle(dpy, systray->win, drw->gc, 0, 0, w, bh);
 	XSync(dpy, False);
- }
+}
 
 void
 updatetitle(Client *c)

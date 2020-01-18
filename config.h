@@ -31,9 +31,9 @@ static const unsigned int borderalpha = 0xc8;
 //};
 
 static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	[SchemeNorm] = { col_pastelblue, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_black, col_pastelpink,  col_pastelblue },
+	/*				fg					bg					border   */
+	[SchemeNorm] = { col_pastelblue,	col_gray1,			col_gray2 },
+	[SchemeSel]  = { col_black,			col_pastelpink,		col_pastelblue },
 };
 
 static const unsigned int alphas[][3]      = {
