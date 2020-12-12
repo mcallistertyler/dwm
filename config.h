@@ -23,6 +23,18 @@ static const char col_pastelblue[] = "#88ddf0";
 static const char col_black[]	    = "#000000";
 static const unsigned int baralpha = 0xc8;
 static const unsigned int borderalpha = 0xc8;
+static const char col1[]            = "#ffffff";
+static const char col2[]            = "#ffffff";
+static const char col3[]            = "#ffffff";
+static const char col4[]            = "#ffffff";
+static const char col5[]            = "#ffffff";
+static const char col6[]            = "#ffffff";
+static const char col7[]            = "#ffffff";
+static const char col8[]            = "#ffffff";
+static const char col9[]            = "#ffffff";
+static const char col10[]           = "#ffffff";
+static const char col11[]           = "#ffffff";
+static const char col12[]           = "#ffffff";
 //static const unsigned int borderalpha = OPAQUE;
 //static const char *colors[][3]      = {
 	/*               fg         bg         border   */
@@ -33,6 +45,18 @@ static const unsigned int borderalpha = 0xc8;
 static const char *colors[][3]      = {
 	/*				fg					bg					border   */
 	[SchemeNorm] = { col_pastelblue,	col_gray1,			col_gray2 },
+	[SchemeCol1]  = { col1,      col_gray1, col_gray2 },
+	[SchemeCol2]  = { col2,      col_gray1, col_gray2 },
+	[SchemeCol3]  = { col3,      col_gray1, col_gray2 },
+	[SchemeCol4]  = { col4,      col_gray1, col_gray2 },
+	[SchemeCol5]  = { col5,      col_gray1, col_gray2 },
+	[SchemeCol6]  = { col6,      col_gray1, col_gray2 },
+	[SchemeCol7]  = { col7,      col_gray1, col_gray2 },
+	[SchemeCol8]  = { col8,      col_gray1, col_gray2 },
+	[SchemeCol9]  = { col8,      col_gray1, col_gray2 },
+	[SchemeCol10] = { col10,     col_gray1, col_gray2 },
+	[SchemeCol11] = { col11,     col_gray1, col_gray2 },
+	[SchemeCol12] = { col12,     col_gray1, col_gray2 },
 	[SchemeSel]  = { col_black,			col_pastelpink,		col_pastelblue },
 };
 
@@ -177,7 +201,9 @@ static Button buttons[] = {
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
-	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button1,        sigdwmblocks,   {.i = 1} },
+	{ ClkStatusText,        0,              Button2,        sigdwmblocks,   {.i = 2} },
+	{ ClkStatusText,        0,              Button3,        sigdwmblocks,   {.i = 3} },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
