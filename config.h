@@ -4,9 +4,14 @@
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int gappx	= 6;		/* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
+static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+static const unsigned int systrayspacing = 2;   /* systray spacing */
+static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
+static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]	    = { "Terminus (TTF):size=9" }; 
+// static const char *fonts[]	    = { "Terminus (TTF):size=9" }; 
+static const char *fonts[]	    = { "JF Dot M+ 10:size=11" }; 
 static const char dmenufont[]       = "monospace:size=8";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -97,14 +102,14 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 // static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *dmenucmd[] = { "rofi", "-show", "run", "-display-run", ">>> ", NULL};
-static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "alacritty", NULL };
 // Not currently working, needs a super cool "im definitely not a cunt" terminal like st
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
 /* Brightness */
-static const char *cmdbrightnessup[] = { "xbacklight", "+10", NULL };
-static const char *cmdbrightnessdown[] = { "xbacklight", "-10", NULL };
+static const char *cmdbrightnessup[] = { "brightnessctl", "set", "+10", NULL };
+static const char *cmdbrightnessdown[] = { "brightnessctl", "set", "-10", NULL };
 
 /* Volume */
 static const char *cmdvolumeup[] = { "amixer", "set", "Master", "5%+" , NULL };
@@ -184,4 +189,3 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
