@@ -10,7 +10,6 @@ static const int usealtbar          = 1;        /* 1 means use non-dwm status ba
 static const char *altbarclass      = "Polybar"; /* Alternate bar class name */
 static const char *alttrayname      = "tray";    /* Polybar tray instance name */
 static const char *altbarcmd        = "$HOME/bar.sh"; /* Alternate bar launch command */
-// static const char *fonts[]	    = { "Terminus (TTF):size=9" }; 
 static const char *fonts[]	    = { "JF Dot M+ 10:size=11" }; 
 static const char dmenufont[]       = "monospace:size=8";
 static const char col_gray1[]       = "#222222";
@@ -19,10 +18,9 @@ static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
 static const char col_pastelpink[]  = "#ffcccc";
-//static const char col_pastelblue[]  = "#d1fff4";
 static const char col_pastelblue[] = "#88ddf0";
+static const char col_polybarpurple[] = "#1A1A2E";
 static const char col_black[]	    = "#000000";
-//static const unsigned int baralpha = 0xd0;
 static const unsigned int baralpha = 0xc8;
 static const unsigned int borderalpha = 0xc8;
 //static const unsigned int borderalpha = OPAQUE;
@@ -53,6 +51,7 @@ static const unsigned int alphas[][3]      = {
 
 /* tagging */
 static const char *tags[] = { "一", "二", "三", "四", "五", "六", "七", "八", "九" };
+//static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
 	/* xprop(1):
