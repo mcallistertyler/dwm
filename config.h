@@ -100,7 +100,8 @@ static const Layout layouts[] = {
 #include "push.c"
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 // static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *dmenucmd[] = { "rofi", "-show", "run", "-display-run", ">>> ", NULL};
+// rofi -show drun -show-icons -display-drun ">>>"
+static const char *dmenucmd[] = { "rofi", "-show", "drun", "-show-icons", "-display-run", ">>> ", NULL};
 static const char *termcmd[]  = { "alacritty", NULL };
 // Not currently working, needs a super cool "im definitely not a cunt" terminal like st
 static const char scratchpadname[] = "scratchpad";
@@ -168,8 +169,8 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_p,      quit,           {0} },
-	{ MODKEY|ControlMask|ShiftMask, XK_p,      quit,           {1} },
+  { MODKEY|ShiftMask,             XK_p,      try_quit,       {0}},
+	{ MODKEY|ControlMask|ShiftMask, XK_p,      quit,           {0} },
 };
 
 /* button definitions */
@@ -188,4 +189,6 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
+
+static const int EMPTY_WINDOW_COUNT = 2;
 
